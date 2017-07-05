@@ -2,7 +2,7 @@
 
 set -e
 
-script_dir=$(dirname $(readlink -f "$0"))
+script_dir=$(dirname -f "$0")
 
 build_dir="$1"
 if [ ! -n "$build_dir" ]; then
