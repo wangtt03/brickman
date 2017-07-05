@@ -161,17 +161,39 @@ namespace BrickManager {
         }
 
         public static void show_pairing_code_dialog (string code) {
-            var label = new Label (code) {
-                margin_top = 12,
-                font = Fonts.get_big ()
+            string[] args = {
+                "/usr/bin/qrencode",
+                "-o",
+                "/tmp/qrcode.png",
+                code,
             };
-            pin_dialog = new MessageDialog.with_content ("Pairing code", label);
-            ulong pin_dialog_closed_id = 0;
-            pin_dialog_closed_id = pin_dialog.closed.connect (() => {
-                pin_dialog.disconnect (pin_dialog_closed_id);
-                pin_dialog = null;
+            var subproc = new Subprocess.newv (args, SubprocessFlags.INHERIT_FDS);
+
+            subproc.wait_async.begin (null, (obj, res) => {
+                try {
+                    subproc.wait_async.end (res);
+                } catch (Error err) {
+                    // shouldn't happen since it is not cancellable
+                }
+                var window = new Window();
+                var qrcodeFile = "/tmp/qrcode.png";
+                var icon = Ev3devKit.Ui.Icon.create_context_from_png (qrcodeFile);
+                window.add(icon);
+                window.show();
             });
-            pin_dialog.show ();
+
+            
+            //  var label = new Label (code) {
+            //      margin_top = 12,
+            //      font = Fonts.get_big ()
+            //  };
+            //  pin_dialog = new MessageDialog.with_content ("Pairing code", label);
+            //  ulong pin_dialog_closed_id = 0;
+            //  pin_dialog_closed_id = pin_dialog.closed.connect (() => {
+            //      pin_dialog.disconnect (pin_dialog_closed_id);
+            //      pin_dialog = null;
+            //  });
+            //  pin_dialog.show ();
         }
 
         public static void close_pairing_code_dialog () {
