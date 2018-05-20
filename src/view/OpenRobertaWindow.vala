@@ -177,7 +177,7 @@ namespace BrickManager {
                 }
                 var window = new Window();
                 var qrcodeFile = "/tmp/qrcode.png";
-                var label = new Label ("Scan QRCode to Connect") {
+                var label = new Label ("Scan QRCode Connect") {
                     horizontal_align = WidgetAlign.CENTER
                 };
                 var icon = new Ev3devKit.Ui.Icon.from_png (qrcodeFile){
